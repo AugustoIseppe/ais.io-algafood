@@ -17,7 +17,7 @@ public class ExclusaoCozinhaMain {
         CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
         Cozinha cozinha = new Cozinha();
         cozinha.setId(1L); // Supondo que a cozinha com ID 1 já exista
-        cozinhaRepository.remover(cozinha);
+        cozinhaRepository.remover(cozinha.getId());
         System.out.printf( "%d - %s\n", cozinha.getId(), cozinha.getNome());
 
     }
