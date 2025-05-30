@@ -9,4 +9,6 @@ import java.util.List;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
     List<Restaurante> findByNomeContainingAndCozinhaId(String nome, Long cozinhaId);
+
+    public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
 }
