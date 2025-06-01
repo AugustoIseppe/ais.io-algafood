@@ -1,8 +1,6 @@
 package com.course.ais.io_algafood_api.api.controller;
 
 import com.course.ais.io_algafood_api.api.model.CozinhaXmlWrapper;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroCozinhaService;
@@ -67,14 +65,8 @@ public class CozinhaController {
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
-        try {
-            cadastroCozinhaService.excluir(cozinhaId);
-            return ResponseEntity.noContent().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cozinhaId) {
+        cadastroCozinhaService.excluir(cozinhaId);
     }
-    }
+}
