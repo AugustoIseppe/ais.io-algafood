@@ -1,19 +1,18 @@
 package com.course.ais.io_algafood_api.api.controller;
 
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
-import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.model.Estado;
 import com.course.ais.io_algafood_api.domain.repository.EstadoRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroEstadoService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,12 +31,8 @@ public class EstadoController {
     }
 
     @GetMapping("/{estadoId}")
-    public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        Optional<Estado> estado = estadoRepository.findById(estadoId);
-        if (estado.isPresent()) {
-            return ResponseEntity.ok(estado.get());
-        }
-        return ResponseEntity.notFound().build();
+    public Estado buscar(@PathVariable Long estadoId) {
+        return cadastroEstadoService.buscarOuFalhar(estadoId);
     }
 
     @PostMapping
@@ -47,27 +42,43 @@ public class EstadoController {
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+    public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+        Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
+        BeanUtils.copyProperties(estado, estadoAtual, "id");
+        return cadastroEstadoService.salvar(estadoAtual);
+    }
+
+    @PatchMapping("/{estadoId}")
+    public Estado atualizarParcial(@PathVariable Long
+                                           estadoId, @RequestBody Map<String, Object> campos) {
+
         Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
 
-        if (estadoAtual.isPresent()) {
-            BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
-            Estado estadoSalvo = cadastroEstadoService.salvar(estadoAtual.get());
-            return ResponseEntity.ok(estadoSalvo);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        merge(campos, estadoAtual.get());
+        return atualizar(estadoId, estadoAtual.get());
+    }
+
+    private static void merge(Map<String, Object> dadosOrigem, Estado estado) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Estado estadoOrigem = objectMapper.convertValue(dadosOrigem, Estado.class);
+
+        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+            System.out.println("Propriedade: " + nomePropriedade + ", Valor: " + valorPropriedade);
+            Field field = ReflectionUtils.findField(Estado.class, nomePropriedade);
+            if (field != null) {
+                field.setAccessible(true);
+                Object novoValor = ReflectionUtils.getField(field, estadoOrigem);
+                ReflectionUtils.setField(field, estado, novoValor);
+            } else {
+                throw new IllegalArgumentException("Propriedade " + nomePropriedade + " não existe na classe Restaurante");
+            }
+        });
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<?> remover(@PathVariable Long estadoId) {
-        try {
-            cadastroEstadoService.excluir(estadoId);
-            return ResponseEntity.noContent().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long estadoId) {
+        cadastroEstadoService.excluir(estadoId);
     }
 }
