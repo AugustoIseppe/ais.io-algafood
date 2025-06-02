@@ -3,10 +3,8 @@ package com.course.ais.io_algafood_api.api.controller;
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.model.Permissao;
-import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import com.course.ais.io_algafood_api.domain.repository.PermissaoRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroPermissaoService;
-import com.course.ais.io_algafood_api.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,47 +34,28 @@ public class PermissaoController {
     }
 
     @GetMapping("/{permissaoId}")
-    public ResponseEntity<Permissao> buscar(@PathVariable Long permissaoId) {
-        Optional<Permissao> permissao = permissaoRepository.findById(permissaoId);
-        if (permissao.isPresent()) {
-            return ResponseEntity.ok(permissao.get());
-        }
-        return ResponseEntity.notFound().build();
+    public Permissao buscar(@PathVariable Long permissaoId) {
+        return cadastroPermissaoService.buscarOuFalhar(permissaoId);
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Permissao permissao) {
-        try {
-            permissao = cadastroPermissaoService.salvar(permissao);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(permissao);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+    public Permissao adicionar(@RequestBody Permissao permissao) {
+       return cadastroPermissaoService.salvar(permissao);
     }
 
     @PutMapping("/{permissaoId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long permissaoId, @RequestBody Permissao permissao) {
-        Optional<Permissao> permissaoAtual = permissaoRepository.findById(permissaoId);
-
-        if (permissaoAtual.isPresent()) {
-            BeanUtils.copyProperties(permissao, permissaoAtual.get(), "id");
-            Permissao permissaoSalva = cadastroPermissaoService.salvar(permissaoAtual.get());
-            return ResponseEntity.ok(permissaoSalva);
-        }
-        return ResponseEntity.notFound().build();
+    public Permissao atualizar(@PathVariable Long permissaoId, @RequestBody Permissao permissao) {
+        Permissao permissaoAtual = cadastroPermissaoService.buscarOuFalhar(permissaoId);
+        BeanUtils.copyProperties(permissao, permissaoAtual, "id");
+        return cadastroPermissaoService.salvar(permissaoAtual);
     }
 
     @PatchMapping("/{permissaoId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long
+    public Permissao atualizarParcial(@PathVariable Long
                                                       permissaoId, @RequestBody Map<String, Object> campos) {
 
         Optional<Permissao> permissaoAtual = permissaoRepository.findById(permissaoId);
 
-        if (permissaoAtual.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         merge(campos, permissaoAtual.get());
         return atualizar(permissaoId, permissaoAtual.get());
     }
@@ -101,15 +80,9 @@ public class PermissaoController {
     }
 
     @DeleteMapping("/{permissaoId}")
-    public ResponseEntity<?> remover(@PathVariable Long permissaoId) {
-        try {
-            cadastroPermissaoService.excluir(permissaoId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long permissaoId) {
+        cadastroPermissaoService.excluir(permissaoId);
     }
+
 }

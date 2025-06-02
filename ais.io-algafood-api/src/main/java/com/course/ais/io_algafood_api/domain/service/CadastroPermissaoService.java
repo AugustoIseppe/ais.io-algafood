@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CadastroPermissaoService {
+
+    public static final String MSG_PERMISSAO_NAO_ENCONTRADA = "Não existe um cadastro de permissão com o código %d";
+    public static final String MSG_PERMISSAO_EM_USO = "Permissão de código %d não pode ser removida, pois está em uso";
+
     @Autowired
     private PermissaoRepository permissaoRepository;
 
@@ -25,10 +29,16 @@ public class CadastroPermissaoService {
             permissaoRepository.deleteById(permissaoId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
-                    String.format("Permissao de código %d não encontrada", permissaoId));
+                    String.format(MSG_PERMISSAO_NAO_ENCONTRADA, permissaoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                    String.format("Permissao de código %d não pode ser removida, pois está em uso", permissaoId));
+                    String.format(MSG_PERMISSAO_EM_USO, permissaoId));
         }
+    }
+
+    public Permissao buscarOuFalhar(Long permissaoId) {
+        return permissaoRepository.findById(permissaoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format(MSG_PERMISSAO_NAO_ENCONTRADA, permissaoId)));
     }
 }
