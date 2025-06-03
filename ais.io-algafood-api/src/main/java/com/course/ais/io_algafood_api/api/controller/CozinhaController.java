@@ -1,6 +1,7 @@
 package com.course.ais.io_algafood_api.api.controller;
 
 import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
+import com.course.ais.io_algafood_api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
@@ -37,7 +38,7 @@ public class CozinhaController {
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
         try {
         return cadastroCozinhaService.salvar(cozinha);
-        } catch (CidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException("Erro ao adicionar a cozinha: " + e.getMessage(), e);
         }
 
@@ -50,7 +51,7 @@ public class CozinhaController {
         Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
         return cadastroCozinhaService.salvar(cozinhaAtual);
-        } catch (CidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException("Erro ao atualizar a cozinha: " + e.getMessage(), e);
         }
     }
