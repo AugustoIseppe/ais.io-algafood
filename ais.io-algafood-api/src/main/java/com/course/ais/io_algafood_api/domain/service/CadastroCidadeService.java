@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.tags.EditorAwareTag;
 
 @Service
 public class CadastroCidadeService {
@@ -20,7 +21,13 @@ public class CadastroCidadeService {
     @Autowired
     private CidadeRepository cidadeRepository;
 
+    @Autowired
+    private CadastroEstadoService cadastroEstadoService;
+
     public Cidade salvar(Cidade cidade) {
+        Long estadoId = cidade.getEstado().getId();
+        Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
+        cidade.setEstado(estado);
         return cidadeRepository.save(cidade);
     }
 
