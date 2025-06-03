@@ -1,7 +1,5 @@
 package com.course.ais.io_algafood_api.api.controller;
 
-import com.course.ais.io_algafood_api.api.exceptionhandler.Problema;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.EstadoNaoEncontradoException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Cidade;
@@ -11,12 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
