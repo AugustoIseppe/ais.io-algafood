@@ -1,6 +1,6 @@
 package com.course.ais.io_algafood_api.api.controller;
 
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.course.ais.io_algafood_api.domain.exceptions.EstadoNaoEncontradoException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Cidade;
 import com.course.ais.io_algafood_api.domain.repository.CidadeRepository;
@@ -41,21 +41,21 @@ public class CidadeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
-        return cadastroCidadeService.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException("Erro ao adicionar a cidade: " + e.getMessage());
+            return cadastroCidadeService.salvar(cidade);
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException("Erro ao adicionar a cidade: " + e.getMessage(), e);
         }
 
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(cidadeId);
-        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
         try {
+            Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(cidadeId);
+            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
             return cadastroCidadeService.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException("Erro ao atualizar a cidade: " + e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException("Erro ao atualizar a cidade: " + e.getMessage(), e);
         }
     }
 

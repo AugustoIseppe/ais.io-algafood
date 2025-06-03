@@ -1,10 +1,8 @@
 package com.course.ais.io_algafood_api.domain.service;
 
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
-import com.course.ais.io_algafood_api.domain.model.Cozinha;
+import com.course.ais.io_algafood_api.domain.exceptions.PermissaoNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.model.Permissao;
-import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
 import com.course.ais.io_algafood_api.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,7 +26,7 @@ public class CadastroPermissaoService {
         try {
             permissaoRepository.deleteById(permissaoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
+            throw new PermissaoNaoEncontradaException(
                     String.format(MSG_PERMISSAO_NAO_ENCONTRADA, permissaoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
@@ -38,7 +36,7 @@ public class CadastroPermissaoService {
 
     public Permissao buscarOuFalhar(Long permissaoId) {
         return permissaoRepository.findById(permissaoId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                .orElseThrow(() -> new PermissaoNaoEncontradaException(
                         String.format(MSG_PERMISSAO_NAO_ENCONTRADA, permissaoId)));
     }
 }

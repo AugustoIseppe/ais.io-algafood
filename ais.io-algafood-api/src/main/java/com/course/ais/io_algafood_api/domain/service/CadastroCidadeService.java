@@ -1,5 +1,6 @@
 package com.course.ais.io_algafood_api.domain.service;
 
+import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.model.Cidade;
@@ -35,8 +36,7 @@ public class CadastroCidadeService {
         try {
             cidadeRepository.deleteById(cidadeId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
+            throw new CidadeNaoEncontradaException(cidadeId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
                     String.format(MSG_CIDADE_EM_USO, cidadeId));
@@ -45,8 +45,7 @@ public class CadastroCidadeService {
 
     public Cidade buscarOuFalhar(Long cidadeId) {
         return cidadeRepository.findById(cidadeId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+                .orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
     }
 
 }

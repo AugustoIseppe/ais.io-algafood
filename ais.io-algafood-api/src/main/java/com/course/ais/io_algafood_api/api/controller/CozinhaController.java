@@ -1,5 +1,7 @@
 package com.course.ais.io_algafood_api.api.controller;
 
+import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
+import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroCozinhaService;
@@ -33,15 +35,24 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+        try {
         return cadastroCozinhaService.salvar(cozinha);
+        } catch (CidadeNaoEncontradaException e) {
+            throw new NegocioException("Erro ao adicionar a cozinha: " + e.getMessage(), e);
+        }
+
     }
 
 
     @PutMapping("/{cozinhaId}")
     public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        try {
         Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
         return cadastroCozinhaService.salvar(cozinhaAtual);
+        } catch (CidadeNaoEncontradaException e) {
+            throw new NegocioException("Erro ao atualizar a cozinha: " + e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("/{cozinhaId}")
