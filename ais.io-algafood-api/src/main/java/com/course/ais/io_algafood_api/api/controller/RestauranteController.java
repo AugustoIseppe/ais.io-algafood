@@ -1,5 +1,7 @@
 package com.course.ais.io_algafood_api.api.controller;
 
+import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import com.course.ais.io_algafood_api.domain.repository.RestauranteRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroRestauranteService;
@@ -36,18 +38,25 @@ public class RestauranteController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
-        return cadastroRestauranteService.salvar(restaurante);
+        try {
+            return cadastroRestauranteService.salvar(restaurante);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException("Erro ao adicionar o restaurante: " + e.getMessage());
+        }
+
     }
 
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
         Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-        Restaurante restauranteSalvo = cadastroRestauranteService.salvar(restauranteAtual);
-        return cadastroRestauranteService.salvar(restauranteAtual);
-
+        try {
+            return cadastroRestauranteService.salvar(restauranteAtual);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException("Erro ao atualizar o restaurante: " + e.getMessage());
+        }
     }
 
     @PatchMapping("/{restauranteId}")
