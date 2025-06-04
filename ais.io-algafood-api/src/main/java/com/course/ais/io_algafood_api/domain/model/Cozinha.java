@@ -1,5 +1,6 @@
 package com.course.ais.io_algafood_api.domain.model;
 
+import com.course.ais.io_algafood_api.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +19,7 @@ public class Cozinha {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+    @NotNull(groups = Groups.CozinhaId.class)
     private Long id;
 
     @NotBlank
