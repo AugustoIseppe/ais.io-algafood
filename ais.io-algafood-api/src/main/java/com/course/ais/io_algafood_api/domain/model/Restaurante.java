@@ -1,6 +1,6 @@
 package com.course.ais.io_algafood_api.domain.model;
 
-import com.course.ais.io_algafood_api.Groups;
+import com.course.ais.io_algafood_api.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
