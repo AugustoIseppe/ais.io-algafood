@@ -67,7 +67,7 @@ INSERT IGNORE INTO grupo_permissao (grupo_id, permissao_id) VALUES (2, 3);
 
 -- Usuário
 INSERT IGNORE INTO usuario (id, nome, email, senha, data_cadastro) VALUES
-(1, 'Augusto Iseppe', 'augusto@algafood.com', '123456', NOW());
+(1, 'Augusto Iseppe', 'augusto@algafood.com', '123456', UTC_TIMESTAMP);
 
 -- Usuário x Grupo
 INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1);
@@ -78,7 +78,15 @@ INSERT IGNORE INTO restaurante (
     endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao
 ) VALUES (
     1, 'Churrascaria Gaúcha', 12.50, 3, '13630-000', 'Av. Brasil', '1000',
-    'Sala 1', 'Centro', 1, NOW(), NOW()
+    'Sala 1', 'Centro', 1, UTC_TIMESTAMP, UTC_TIMESTAMP
+);
+
+INSERT IGNORE INTO restaurante (
+    id, nome, taxa_frete, cozinha_id, endereco_cep, endereco_logradouro, endereco_numero,
+    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao
+) VALUES (
+    2, 'Restaurante Tailandês', 15.00, 1, '13630-001', 'Rua das Flores', '200',
+    'Apto 101', 'Jardim', 1, UTC_TIMESTAMP, UTC_TIMESTAMP
 );
 
 -- Restaurante x Forma Pagamento

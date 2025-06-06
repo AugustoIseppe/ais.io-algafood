@@ -3,11 +3,14 @@ package com.course.ais.io_algafood_api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class AlgafoodApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AlgafoodApplication.class, args);
-	}
+    public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SpringApplication.run(AlgafoodApplication.class, args);
+    }
 
 }
