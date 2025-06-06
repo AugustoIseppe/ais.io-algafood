@@ -26,7 +26,6 @@ public class Cozinha {
     @Column(name = "nome")
     private String nome;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "cozinha")
     private List<Restaurante> restaurantes = new ArrayList<>();
 }
