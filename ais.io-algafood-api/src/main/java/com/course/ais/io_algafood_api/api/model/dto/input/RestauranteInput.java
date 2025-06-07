@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class RestauranteInputDTO {
+public class RestauranteInput {
 
     @NotBlank
     private String nome;
@@ -22,6 +22,6 @@ public class RestauranteInputDTO {
 
     @NotNull
     @Valid
-    private CozinhaIdInputDTO cozinha;
+    private CozinhaIdInput cozinha;
 
 }
