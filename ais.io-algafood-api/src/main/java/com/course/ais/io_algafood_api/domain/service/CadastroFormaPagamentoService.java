@@ -29,6 +29,7 @@ public class CadastroFormaPagamentoService {
     public void excluir(Long formaPagamentoId) {
         try {
             formaPagamentoRepository.deleteById(formaPagamentoId);
+            formaPagamentoRepository.flush();
         } catch (EmptyResultDataAccessException e) {
             throw new FormaPagamentoNaoEncontradoException(
                     String.format(MSG_FORMA_PAGAMENTO_NAO_ENCONTRADA, formaPagamentoId));
