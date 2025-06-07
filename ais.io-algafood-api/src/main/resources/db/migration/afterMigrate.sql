@@ -75,18 +75,18 @@ INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1);
 -- Restaurante
 INSERT IGNORE INTO restaurante (
     id, nome, taxa_frete, cozinha_id, endereco_cep, endereco_logradouro, endereco_numero,
-    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao
+    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao, ativo
 ) VALUES (
     1, 'Churrascaria Gaúcha', 12.50, 3, '13630-000', 'Av. Brasil', '1000',
-    'Sala 1', 'Centro', 1, UTC_TIMESTAMP, UTC_TIMESTAMP
+    'Sala 1', 'Centro', 1, UTC_TIMESTAMP, UTC_TIMESTAMP, true
 );
 
 INSERT IGNORE INTO restaurante (
     id, nome, taxa_frete, cozinha_id, endereco_cep, endereco_logradouro, endereco_numero,
-    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao
+    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao, ativo
 ) VALUES (
     2, 'Restaurante Tailandês', 15.00, 1, '13630-001', 'Rua das Flores', '200',
-    'Apto 101', 'Jardim', 1, UTC_TIMESTAMP, UTC_TIMESTAMP
+    'Apto 101', 'Jardim', 1, UTC_TIMESTAMP, UTC_TIMESTAMP, true
 );
 
 -- Restaurante x Forma Pagamento
