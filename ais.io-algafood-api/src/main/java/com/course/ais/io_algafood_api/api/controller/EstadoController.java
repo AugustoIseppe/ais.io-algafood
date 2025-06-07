@@ -1,20 +1,18 @@
 package com.course.ais.io_algafood_api.api.controller;
 
+import com.course.ais.io_algafood_api.api.assembler.EstadoInputDisassembler;
+import com.course.ais.io_algafood_api.api.assembler.EstadoModelAssembler;
+import com.course.ais.io_algafood_api.api.model.dto.input.EstadoInput;
+import com.course.ais.io_algafood_api.api.model.dto.output.EstadoModel;
 import com.course.ais.io_algafood_api.domain.model.Estado;
 import com.course.ais.io_algafood_api.domain.repository.EstadoRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroEstadoService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/estados")
@@ -26,55 +24,46 @@ public class EstadoController {
     @Autowired
     private CadastroEstadoService cadastroEstadoService;
 
+    @Autowired
+    private EstadoModelAssembler estadoModelAssembler;
+
+    @Autowired
+    private EstadoInputDisassembler estadoInputDisassembler;
+
     @GetMapping
-    public List<Estado> listar() {
-        return estadoRepository.findAll();
+    public List<EstadoModel> listar() {
+        List<Estado> todosEstados = estadoRepository.findAll();
+
+        return estadoModelAssembler.toCollectionModel(todosEstados);
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
-        return cadastroEstadoService.buscarOuFalhar(estadoId);
+    public EstadoModel buscar(@PathVariable Long estadoId) {
+        Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
+
+        return estadoModelAssembler.toModel(estado);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar(@RequestBody @Valid Estado estado) {
-        return cadastroEstadoService.salvar(estado);
+    public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+        Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
+
+        estado = cadastroEstadoService.salvar(estado);
+
+        return estadoModelAssembler.toModel(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable  Long estadoId, @RequestBody @Valid Estado estado) {
+    public EstadoModel atualizar(@PathVariable Long estadoId,
+                                 @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-        return cadastroEstadoService.salvar(estadoAtual);
-    }
 
-    @PatchMapping("/{estadoId}")
-    public Estado atualizarParcial(@PathVariable Long
-                                           estadoId, @RequestBody Map<String, Object> campos) {
+        estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
 
-        Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
+        estadoAtual = cadastroEstadoService.salvar(estadoAtual);
 
-        merge(campos, estadoAtual.get());
-        return atualizar(estadoId, estadoAtual.get());
-    }
-
-    private static void merge(Map<String, Object> dadosOrigem, Estado estado) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Estado estadoOrigem = objectMapper.convertValue(dadosOrigem, Estado.class);
-
-        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-            System.out.println("Propriedade: " + nomePropriedade + ", Valor: " + valorPropriedade);
-            Field field = ReflectionUtils.findField(Estado.class, nomePropriedade);
-            if (field != null) {
-                field.setAccessible(true);
-                Object novoValor = ReflectionUtils.getField(field, estadoOrigem);
-                ReflectionUtils.setField(field, estado, novoValor);
-            } else {
-                throw new IllegalArgumentException("Propriedade " + nomePropriedade + " não existe na classe Restaurante");
-            }
-        });
+        return estadoModelAssembler.toModel(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

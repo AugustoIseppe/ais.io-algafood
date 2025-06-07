@@ -1,7 +1,6 @@
 package com.course.ais.io_algafood_api.domain.model;
 
 import com.course.ais.io_algafood_api.core.validation.Groups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +21,6 @@ public class Cozinha {
     @NotNull(groups = Groups.CozinhaId.class)
     private Long id;
 
-    @NotBlank
     @Column(name = "nome")
     private String nome;
 

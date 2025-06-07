@@ -1,5 +1,9 @@
 package com.course.ais.io_algafood_api.api.controller;
 
+import com.course.ais.io_algafood_api.api.assembler.CozinhaInputDisassembler;
+import com.course.ais.io_algafood_api.api.assembler.CozinhaModelAssembler;
+import com.course.ais.io_algafood_api.api.model.dto.input.CozinhaInput;
+import com.course.ais.io_algafood_api.api.model.dto.output.CozinhaModel;
 import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
@@ -24,42 +28,48 @@ public class CozinhaController {
     @Autowired
     private CadastroCozinhaService cadastroCozinhaService;
 
+
+    @Autowired
+    private CozinhaModelAssembler cozinhaModelAssembler;
+
+    @Autowired
+    private CozinhaInputDisassembler cozinhaInputDisassembler;
+
     @GetMapping
-    public List<Cozinha> listar() {
-        return cozinhaRepository.findAll();
+    public List<CozinhaModel> listar() {
+        List<Cozinha> todasCozinhas = cozinhaRepository.findAll();
+
+        return cozinhaModelAssembler.toCollectionModel(todasCozinhas);
     }
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha buscar(@PathVariable Long cozinhaId) {
-        return cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+    public CozinhaModel buscar(@PathVariable Long cozinhaId) {
+        Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+
+        return cozinhaModelAssembler.toModel(cozinha);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
-        try {
-        return cadastroCozinhaService.salvar(cozinha);
-        } catch (CozinhaNaoEncontradaException e) {
-            throw new NegocioException("Erro ao adicionar a cozinha: " + e.getMessage(), e);
-        }
+    public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+        Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+        cozinha = cadastroCozinhaService.salvar(cozinha);
 
+        return cozinhaModelAssembler.toModel(cozinha);
     }
 
-
     @PutMapping("/{cozinhaId}")
-    public Cozinha atualizar(@PathVariable  Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
-        try {
+    public CozinhaModel atualizar(@PathVariable Long cozinhaId,
+                                  @RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
-        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-        return cadastroCozinhaService.salvar(cozinhaAtual);
-        } catch (CozinhaNaoEncontradaException e) {
-            throw new NegocioException("Erro ao atualizar a cozinha: " + e.getMessage(), e);
-        }
+        cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
+        cozinhaAtual = cadastroCozinhaService.salvar(cozinhaAtual);
+
+        return cozinhaModelAssembler.toModel(cozinhaAtual);
     }
 
     @DeleteMapping("/{cozinhaId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long cozinhaId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)    public void remover(@PathVariable Long cozinhaId) {
         cadastroCozinhaService.excluir(cozinhaId);
     }
 }
