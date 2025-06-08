@@ -4,21 +4,15 @@ import com.course.ais.io_algafood_api.api.assembler.FormaPagamentoInputDisassemb
 import com.course.ais.io_algafood_api.api.assembler.FormaPagamentoModelAssembler;
 import com.course.ais.io_algafood_api.api.model.dto.input.FormaPagamentoInput;
 import com.course.ais.io_algafood_api.api.model.dto.output.FormaPagamentoModel;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
-import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.FormaPagamento;
 import com.course.ais.io_algafood_api.domain.repository.FormaPagamentoRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroFormaPagamentoService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.BeanUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/forma-pagamento")
@@ -48,27 +42,23 @@ public class FormaPagamentoController {
     }
 
     @PostMapping
-    public FormaPagamentoModel adicionar(@RequestBody FormaPagamentoInput formaPagamento) {
-        try {
-            FormaPagamento formaPagamentoSalva = formaPagamentoInputDisassembler.toDomainObject(formaPagamento);
-            return formaPagamentoModelAssembler.toModel(cadastroFormaPagamentoService.salvar(formaPagamentoSalva));
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException("Erro ao adicionar a forma de pagamento: " + e.getMessage());
-        }
+    public FormaPagamentoModel adicionar(@RequestBody FormaPagamentoInput formaPagamentoInput) {
+        FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
+        formaPagamento = cadastroFormaPagamentoService.salvar(formaPagamento);
+        return formaPagamentoModelAssembler.toModel(formaPagamento);
     }
 
     @PutMapping("/{formaPagamentoId}")
-    public FormaPagamentoModel atualizar(@PathVariable Long formaPagamentoId, @RequestBody FormaPagamentoInput formaPagamento) {
-        try {
-            FormaPagamento formaPagamentoAtual = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
-            formaPagamentoInputDisassembler.copyToDomainObject(formaPagamento, formaPagamentoAtual);
-            return formaPagamentoModelAssembler.toModel(cadastroFormaPagamentoService.salvar(formaPagamentoAtual));
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException("Erro ao atualizar a forma de pagamento: " + e.getMessage());
-        }
+    public FormaPagamentoModel atualizar(@PathVariable Long formaPagamentoId,
+                                         @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
+        FormaPagamento formaPagamentoAtual = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+        formaPagamentoInputDisassembler.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
+        formaPagamentoAtual = cadastroFormaPagamentoService.salvar(formaPagamentoAtual);
+        return formaPagamentoModelAssembler.toModel(formaPagamentoAtual);
     }
 
     @DeleteMapping("/{formaPagamentoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long formaPagamentoId) {
         cadastroFormaPagamentoService.excluir(formaPagamentoId);
     }
