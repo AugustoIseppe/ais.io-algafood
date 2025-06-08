@@ -2,6 +2,7 @@ package com.course.ais.io_algafood_api.domain.service;
 
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
 import com.course.ais.io_algafood_api.domain.exceptions.RestauranteNaoEncontradoException;
+import com.course.ais.io_algafood_api.domain.model.Cidade;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
@@ -28,11 +29,20 @@ public class CadastroRestauranteService {
     @Autowired
     private CadastroCozinhaService cadastroCozinhaService;
 
+    @Autowired
+    private CadastroCidadeService cadastroCidadeService;
+
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
+        Long cidadeId = restaurante.getEndereco().getCidade().getId();
+
         Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+        Cidade cidade = cadastroCidadeService.buscarOuFalhar(cidadeId);
+
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
+
         return restauranteRepository.save(restaurante);
     }
 

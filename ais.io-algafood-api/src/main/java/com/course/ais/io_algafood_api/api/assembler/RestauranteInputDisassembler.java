@@ -1,6 +1,7 @@
 package com.course.ais.io_algafood_api.api.assembler;
 
 import com.course.ais.io_algafood_api.api.model.dto.input.RestauranteInput;
+import com.course.ais.io_algafood_api.domain.model.Cidade;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,10 @@ public class RestauranteInputDisassembler {
 
     public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
         restaurante.setCozinha(new Cozinha());
+
+        if ( restaurante.getEndereco() != null ) {
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
         modelMapper.map(restauranteInput, restaurante);
     }
 }

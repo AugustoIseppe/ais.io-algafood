@@ -4,6 +4,7 @@ import com.course.ais.io_algafood_api.api.assembler.RestauranteInputDisassembler
 import com.course.ais.io_algafood_api.api.assembler.RestauranteModelAssembler;
 import com.course.ais.io_algafood_api.api.model.dto.input.RestauranteInput;
 import com.course.ais.io_algafood_api.api.model.dto.output.RestauranteModel;
+import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
@@ -51,7 +52,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
             return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException("Erro ao adicionar o restaurante: " + e.getMessage());
         }
     }
@@ -62,7 +63,7 @@ public class RestauranteController {
             Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
             restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
             return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException("Erro ao atualizar o restaurante: " + e.getMessage());
         }
     }
