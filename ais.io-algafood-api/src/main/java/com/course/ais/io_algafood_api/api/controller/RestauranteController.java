@@ -45,7 +45,6 @@ public class RestauranteController {
         return restauranteModelAssembler.toModel(restaurante);
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
@@ -55,7 +54,6 @@ public class RestauranteController {
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException("Erro ao adicionar o restaurante: " + e.getMessage());
         }
-
     }
 
     @PutMapping("/{restauranteId}")
