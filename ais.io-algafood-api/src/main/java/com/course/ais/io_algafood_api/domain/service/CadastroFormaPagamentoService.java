@@ -1,8 +1,7 @@
 package com.course.ais.io_algafood_api.domain.service;
 
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
-import com.course.ais.io_algafood_api.domain.exceptions.EntidadeNaoEncontradaException;
-import com.course.ais.io_algafood_api.domain.exceptions.FormaPagamentoNaoEncontradoException;
+import com.course.ais.io_algafood_api.domain.exceptions.FormaPagamentoNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.model.FormaPagamento;
 import com.course.ais.io_algafood_api.domain.repository.FormaPagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class CadastroFormaPagamentoService {
             formaPagamentoRepository.deleteById(formaPagamentoId);
             formaPagamentoRepository.flush();
         } catch (EmptyResultDataAccessException e) {
-            throw new FormaPagamentoNaoEncontradoException(
+            throw new FormaPagamentoNaoEncontradaException(
                     String.format(MSG_FORMA_PAGAMENTO_NAO_ENCONTRADA, formaPagamentoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
@@ -41,7 +40,7 @@ public class CadastroFormaPagamentoService {
 
     public FormaPagamento buscarOuFalhar(Long formaPagamentoId) {
         return formaPagamentoRepository.findById(formaPagamentoId)
-                .orElseThrow(() -> new FormaPagamentoNaoEncontradoException(
+                .orElseThrow(() -> new FormaPagamentoNaoEncontradaException(
                         String.format(MSG_FORMA_PAGAMENTO_NAO_ENCONTRADA, formaPagamentoId)));
     }
 }
