@@ -52,6 +52,8 @@ INSERT IGNORE INTO forma_pagamento (id, descricao) VALUES (4, 'PIX');
 INSERT IGNORE INTO grupo (id, nome) VALUES (1, 'Administrador');
 INSERT IGNORE INTO grupo (id, nome) VALUES (2, 'Gerente');
 INSERT IGNORE INTO grupo (id, nome) VALUES (3, 'Cliente');
+INSERT IGNORE INTO grupo (id,nome) VALUES (4, 'Vendedor'), (5, 'Secretária'), (6, 'Cadastrador');
+
 
 -- Permissões
 INSERT IGNORE INTO permissao (id, nome, descricao) VALUES (1, 'CONSULTAR_USUARIOS', 'Pode consultar os usuários');
@@ -97,3 +99,4 @@ INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_
 INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
 (1, 'Picanha no Alho', 'Deliciosa picanha fatiada com alho frito', 59.90, TRUE, 1),
 (2, 'Linguiça Artesanal', 'Linguiça de pernil com ervas finas', 34.90, TRUE, 1);
+
