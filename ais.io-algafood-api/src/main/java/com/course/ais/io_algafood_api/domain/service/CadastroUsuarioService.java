@@ -4,9 +4,12 @@ import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.exceptions.UsuarioNaoEncontradoException;
 import com.course.ais.io_algafood_api.domain.model.Usuario;
 import com.course.ais.io_algafood_api.domain.repository.UsuarioRepository;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class CadastroUsuarioService {
@@ -14,8 +17,20 @@ public class CadastroUsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Transactional
     public Usuario salvar(Usuario usuario) {
+
+        entityManager.detach(usuario);
+
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+            throw new NegocioException("Já existe um usuário cadastrado com este e-mail.");
+        }
+
         return usuarioRepository.save(usuario);
     }
 
