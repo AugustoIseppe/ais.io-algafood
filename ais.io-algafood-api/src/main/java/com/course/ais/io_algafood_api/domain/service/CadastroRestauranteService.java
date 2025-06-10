@@ -4,6 +4,7 @@ import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
 import com.course.ais.io_algafood_api.domain.exceptions.RestauranteNaoEncontradoException;
 import com.course.ais.io_algafood_api.domain.model.Cidade;
 import com.course.ais.io_algafood_api.domain.model.Cozinha;
+import com.course.ais.io_algafood_api.domain.model.FormaPagamento;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
 import com.course.ais.io_algafood_api.domain.repository.RestauranteRepository;
@@ -31,6 +32,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CadastroCidadeService cadastroCidadeService;
+
+    @Autowired
+    private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -74,5 +78,20 @@ public class CadastroRestauranteService {
     public void inativar(Long restauranteId) {
         Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
         restauranteAtual.inativar();
+    }
+
+    @Transactional
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.adicionarFormaPagamento(formaPagamento);
+    }
+    @Transactional
+    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.removerFormaPagamento(formaPagamento);
     }
 }
