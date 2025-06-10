@@ -12,6 +12,7 @@ delete from cidade;
 delete from forma_pagamento;
 delete from estado;
 delete from cozinha;
+delete from restaurante_usuario_responsavel;
 
 set foreign_key_checks = 1;
 
@@ -76,6 +77,8 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 (3, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
 (4, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
 (5, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
+insert into usuario (id, nome, email, senha, data_cadastro) values
+(6, 'Manoel Lima', 'manoel.loja@gmail.com', '123', utc_timestamp);
 
 -- Usuário x Grupo
 INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1), (1, 2), (2, 2);
@@ -100,6 +103,8 @@ INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) V
 INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
 (3, 'Pad Thai', 'Tradicional macarrão tailandês com camarões', 45.00, TRUE, 2),
 (4, 'Massaman Curry', 'Curry indiano com carne e batatas', 49.90, TRUE, 2);
+
+INSERT INTO restaurante_usuario_responsavel (restaurante_id, usuario_id) VALUES (1, 5), (3, 5);
 
 
 
