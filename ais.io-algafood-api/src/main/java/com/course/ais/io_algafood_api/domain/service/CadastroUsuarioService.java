@@ -2,6 +2,7 @@ package com.course.ais.io_algafood_api.domain.service;
 
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.exceptions.UsuarioNaoEncontradoException;
+import com.course.ais.io_algafood_api.domain.model.Grupo;
 import com.course.ais.io_algafood_api.domain.model.Usuario;
 import com.course.ais.io_algafood_api.domain.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
@@ -19,6 +20,10 @@ public class CadastroUsuarioService {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private CadastroGrupoService cadastroGrupo;
+
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -48,5 +53,21 @@ public class CadastroUsuarioService {
     public Usuario buscarOuFalhar(Long usuarioId) {
         return usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
+    }
+
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
     }
 }
