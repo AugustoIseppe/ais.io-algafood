@@ -19,6 +19,7 @@ public class CadastroPermissaoService {
     @Autowired
     private PermissaoRepository permissaoRepository;
 
+
     @Transactional
     public Permissao salvar(Permissao permissao) {
         return permissaoRepository.save(permissao);
