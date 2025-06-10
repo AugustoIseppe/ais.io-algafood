@@ -78,7 +78,7 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 (5, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
 
 -- Usuário x Grupo
-INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1);
+INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1), (1, 2), (2, 2);
 
 -- Restaurante
 insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, true, true, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
