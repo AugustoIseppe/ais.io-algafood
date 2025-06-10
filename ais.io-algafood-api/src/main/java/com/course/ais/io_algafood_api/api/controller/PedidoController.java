@@ -1,7 +1,9 @@
 package com.course.ais.io_algafood_api.api.controller;
 
 import com.course.ais.io_algafood_api.api.assembler.PedidoModelAssembler;
+import com.course.ais.io_algafood_api.api.assembler.PedidoResumoModelAssembler;
 import com.course.ais.io_algafood_api.api.model.dto.output.PedidoModel;
+import com.course.ais.io_algafood_api.api.model.dto.output.PedidoResumoModel;
 import com.course.ais.io_algafood_api.domain.model.Pedido;
 import com.course.ais.io_algafood_api.domain.repository.PedidoRepository;
 import com.course.ais.io_algafood_api.domain.service.EmissaoPedidoService;
@@ -26,11 +28,14 @@ public class PedidoController {
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
 
+    @Autowired
+    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
     @GetMapping
-    public List<PedidoModel> listar() {
+    public List<PedidoResumoModel> listar() {
         List<Pedido> todosPedidos = pedidoRepository.findAll();
 
-        return pedidoModelAssembler.toCollectionModel(todosPedidos);
+        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
     }
 
     @GetMapping("/{pedidoId}")
