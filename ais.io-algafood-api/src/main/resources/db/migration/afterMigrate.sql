@@ -100,6 +100,7 @@ INSERT IGNORE INTO restaurante (
 -- Restaurante x Forma Pagamento
 INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1);
 INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 4);
+INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (2, 2);
 
 -- Produtos
 INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
