@@ -2,10 +2,7 @@ package com.course.ais.io_algafood_api.domain.service;
 
 import com.course.ais.io_algafood_api.domain.exceptions.EntidadeEmUsoException;
 import com.course.ais.io_algafood_api.domain.exceptions.RestauranteNaoEncontradoException;
-import com.course.ais.io_algafood_api.domain.model.Cidade;
-import com.course.ais.io_algafood_api.domain.model.Cozinha;
-import com.course.ais.io_algafood_api.domain.model.FormaPagamento;
-import com.course.ais.io_algafood_api.domain.model.Restaurante;
+import com.course.ais.io_algafood_api.domain.model.*;
 import com.course.ais.io_algafood_api.domain.repository.CozinhaRepository;
 import com.course.ais.io_algafood_api.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CadastroRestauranteService {
@@ -35,6 +34,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CadastroFormaPagamentoService cadastroFormaPagamentoService;
+
+    @Autowired
+    private CadastroUsuarioService cadastroUsuario;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -109,4 +111,29 @@ public class CadastroRestauranteService {
         restauranteAtual.fechar();
     }
 
+    @Transactional
+    public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
+    }
+
+    @Transactional
+    public void associarResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
+    }
+
+    @Transactional //Ativar vários restaurantes simultaneamente
+    public void ativar(List<Long> restauranteIds) {
+        restauranteIds.forEach(this::ativar);
+    }
+
+    @Transactional //Inativar vários restaurantes simultaneamente
+    public void inativar(List<Long> restauranteIds) {
+        restauranteIds.forEach(this::inativar);
+    }
 }
