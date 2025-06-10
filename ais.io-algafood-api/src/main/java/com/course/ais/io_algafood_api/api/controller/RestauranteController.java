@@ -7,6 +7,7 @@ import com.course.ais.io_algafood_api.api.model.dto.output.RestauranteModel;
 import com.course.ais.io_algafood_api.domain.exceptions.CidadeNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
+import com.course.ais.io_algafood_api.domain.exceptions.RestauranteNaoEncontradoException;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import com.course.ais.io_algafood_api.domain.repository.RestauranteRepository;
 import com.course.ais.io_algafood_api.domain.service.CadastroRestauranteService;
@@ -96,5 +97,26 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fechar(@PathVariable Long restauranteId) {
         cadastroRestauranteService.fechar(restauranteId);
+    }
+
+    @PutMapping("ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestauranteService.ativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException("Erro ao ativar os restaurantes: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestauranteService.inativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException("Erro ao inativar os restaurantes: " + e.getMessage());
+        }
+
     }
 }
