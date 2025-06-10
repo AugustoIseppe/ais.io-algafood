@@ -13,6 +13,8 @@ delete from forma_pagamento;
 delete from estado;
 delete from cozinha;
 delete from restaurante_usuario_responsavel;
+delete from pedido;
+delete from item_pedido;
 
 set foreign_key_checks = 1;
 
@@ -106,5 +108,13 @@ INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) V
 
 INSERT INTO restaurante_usuario_responsavel (restaurante_id, usuario_id) VALUES (1, 5), (3, 5);
 
+insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep,
+    endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+    status, data_criacao, subtotal, taxa_frete, valor_total)
+values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+'CRIADO', utc_timestamp, 298.90, 10, 308.90);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
+values (1, 1, 2, 2, 110, 220, 'Menos picante, por favor');
 
 
