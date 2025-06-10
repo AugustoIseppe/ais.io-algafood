@@ -81,21 +81,12 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1);
 
 -- Restaurante
-INSERT IGNORE INTO restaurante (
-    id, nome, taxa_frete, cozinha_id, endereco_cep, endereco_logradouro, endereco_numero,
-    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao, ativo
-) VALUES (
-    1, 'Churrascaria Gaúcha', 12.50, 3, '13630-000', 'Av. Brasil', '1000',
-    'Sala 1', 'Centro', 1, UTC_TIMESTAMP, UTC_TIMESTAMP, true
-);
-
-INSERT IGNORE INTO restaurante (
-    id, nome, taxa_frete, cozinha_id, endereco_cep, endereco_logradouro, endereco_numero,
-    endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao, ativo
-) VALUES (
-    2, 'Restaurante Tailandês', 15.00, 1, '13630-001', 'Rua das Flores', '200',
-    'Apto 101', 'Jardim', 1, UTC_TIMESTAMP, UTC_TIMESTAMP, true
-);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, true, true, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp, true, true);
 
 -- Restaurante x Forma Pagamento
 INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1);
@@ -109,4 +100,6 @@ INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) V
 INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
 (3, 'Pad Thai', 'Tradicional macarrão tailandês com camarões', 45.00, TRUE, 2),
 (4, 'Massaman Curry', 'Curry indiano com carne e batatas', 49.90, TRUE, 2);
+
+
 
