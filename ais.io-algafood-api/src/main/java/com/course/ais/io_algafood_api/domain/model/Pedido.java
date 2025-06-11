@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,6 +20,8 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String codigo;
 
     private BigDecimal subtotal;
     private BigDecimal taxaFrete;
@@ -60,6 +63,11 @@ public class Pedido {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.valorTotal = this.subtotal.add(this.taxaFrete);
+    }
+
+    @PrePersist
+    private void gerarCodigo() {
+        setCodigo(UUID.randomUUID().toString());
     }
 
 //    public void confirmar() {
