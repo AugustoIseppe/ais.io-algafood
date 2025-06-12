@@ -37,6 +37,15 @@ insert ignore into cozinha (id, nome) values (1, 'Tailandesa');
 insert ignore into cozinha (id, nome) values (2, 'Indiana');
 insert ignore into cozinha (id, nome) values (3, 'Argentina');
 insert ignore into cozinha (id, nome) values (4, 'Brasileira');
+insert ignore into cozinha (id, nome) values (5, 'Colombiana');
+insert ignore into cozinha (id, nome) values (6, 'Espanhola');
+insert ignore into cozinha (id, nome) values (7, 'Quebequense');
+insert ignore into cozinha (id, nome) values (8, 'Russa');
+insert ignore into cozinha (id, nome) values (9, 'Holandesa');
+insert ignore into cozinha (id, nome) values (10, 'Alemã');
+insert ignore into cozinha (id, nome) values (11, 'Americana');
+insert ignore into cozinha (id, nome) values (12, 'Francesa');
+
 
 -- Estados
 INSERT IGNORE INTO estado (id, nome) VALUES (1, 'São Paulo');
@@ -94,6 +103,14 @@ insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_a
 insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp, true, true);
 insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true, true);
 insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (7, 'Restaurante Colombiano', 8.50, 5, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (8, 'Restaurante Espanhol', 7.50, 6, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (9, 'Restaurante Quebequense', 10.50, 7, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (10, 'Restaurante Russo', 9.00, 8, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (11, 'Restaurante Holandês', 8.00, 9, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (12, 'Restaurante Alemão', 11.00, 10, utc_timestamp, utc_timestamp, true, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo, aberto) values (13, 'Restaurante Americano', 10.00, 11, utc_timestamp, utc_timestamp, true, true);
+
 
 -- Restaurante x Forma Pagamento
 INSERT IGNORE INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1);
@@ -107,6 +124,13 @@ INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) V
 INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
 (3, 'Pad Thai', 'Tradicional macarrão tailandês com camarões', 45.00, TRUE, 2),
 (4, 'Massaman Curry', 'Curry indiano com carne e batatas', 49.90, TRUE, 2);
+INSERT IGNORE INTO produto (id, nome, descricao, preco, ativo, restaurante_id) VALUES
+(5, 'Biryani de Frango', 'Arroz indiano com especiarias e frango', 39.90, TRUE, 3),
+(6, 'Churrasco Argentino', 'Cortes nobres de carne argentina', 65.00, TRUE, 4),
+(7, 'Feijoada Completa', 'Feijoada tradicional com todos os acompanhamentos', 49.90, TRUE, 5),
+(8, 'Hambúrguer Gourmet', 'Hambúrguer artesanal com queijo cheddar e bacon', 29.90, TRUE, 6),
+(9, 'Tacos Mexicanos', 'Tacos recheados com carne moída e guacamole', 24.90, TRUE, 7),
+(10, 'Paella Valenciana', 'Arroz com frutos do mar e açafrão', 59.90, TRUE, 8);
 
 INSERT INTO restaurante_usuario_responsavel (restaurante_id, usuario_id) VALUES (1, 5), (3, 5);
 
@@ -118,5 +142,9 @@ values (1, '5c4be282-46cc-11f0-a919-74563c3a280c', 1, 1, 1, 1, '38400-000', 'Rua
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
 values (1, 1, 2, 2, 110, 220, 'Menos picante, por favor');
+
+
+
+
 
 
