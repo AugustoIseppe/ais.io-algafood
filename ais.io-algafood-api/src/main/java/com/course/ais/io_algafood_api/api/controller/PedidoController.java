@@ -11,9 +11,15 @@ import com.course.ais.io_algafood_api.domain.exceptions.NegocioException;
 import com.course.ais.io_algafood_api.domain.model.Pedido;
 import com.course.ais.io_algafood_api.domain.model.Usuario;
 import com.course.ais.io_algafood_api.domain.repository.PedidoRepository;
+import com.course.ais.io_algafood_api.domain.repository.filter.PedidoFilter;
 import com.course.ais.io_algafood_api.domain.service.EmissaoPedidoService;
+import com.course.ais.io_algafood_api.infrastructure.spec.PedidoSpecs;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,11 +46,20 @@ public class PedidoController {
 
 
     @GetMapping
-    public List<PedidoResumoModel> listar() {
-        List<Pedido> todosPedidos = pedidoRepository.findAll();
+    public Page<PedidoResumoModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(pageable);
 
-        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
+        List<PedidoResumoModel> pedidosResumoModels = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());
+
+        return new PageImpl<>(pedidosResumoModels, pageable, pedidosPage.getTotalElements());
     }
+
+//    @GetMapping
+//    public List<PedidoResumoModel> pesquisar(PedidoFilter filtro) {
+//        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
+//
+//        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
+//    }
 
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
