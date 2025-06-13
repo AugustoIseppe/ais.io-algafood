@@ -1,5 +1,6 @@
 package com.course.ais.io_algafood_api.domain.repository;
 
+import com.course.ais.io_algafood_api.domain.model.FotoProduto;
 import com.course.ais.io_algafood_api.domain.model.Produto;
 import com.course.ais.io_algafood_api.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+public interface ProdutoRepository extends JpaRepository<Produto, Long>, ProdutoRepositoryQueries {
 
     @Query("from Produto where restaurante.id = :restaurante and id = :produto")
     Optional<Produto> findById(@Param("restaurante") Long restauranteId,
@@ -22,4 +23,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     // Buscar restaurantaes que estejam ativos
     @Query("from Produto p where p.ativo = true and p.restaurante = :restaurante")
     List<Produto> findAtivosByRestaurante(Restaurante restaurante);
+
+    @Query("from FotoProduto f join f.produto p where p.restaurante.id = :restauranteId and f.produto.id = :produtoId")
+    Optional<FotoProduto> findFotoById(Long restauranteId, Long produtoId);
 }

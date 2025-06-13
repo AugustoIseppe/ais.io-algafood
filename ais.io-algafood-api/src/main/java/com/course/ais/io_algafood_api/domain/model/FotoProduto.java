@@ -1,9 +1,6 @@
 package com.course.ais.io_algafood_api.domain.model;
 
-import com.course.ais.io_algafood_api.core.validation.Groups;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,6 +22,13 @@ public class FotoProduto {
     private String descricao;
     private String contentType;
     private Long tamanho;
+
+    public Long getRestauranteId() {
+        if (getProduto() != null) {
+            return getProduto().getRestaurante().getId();
+        }
+        return null;
+    }
 
 }
 
